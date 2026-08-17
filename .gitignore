@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build and test output
+dist/
+**/dist/
+coverage/
+*.tsbuildinfo
+libs/**/src/**/*.js
+libs/**/src/**/*.js.map
+libs/**/src/**/*.d.ts
+
+# Environment files (keep the documented example)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/
+
+# Terraform (examples and reusable configuration remain tracked)
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars
+!*.tfvars.example
+helm/retail-platform/values.gcp.local.yaml
+backend.hcl
+backend.*.hcl
+!backend.hcl.example
+crash.log
+crash.*.log
+
+# Local agent config and article drafts (not part of the published repo)
+.claude/
+articles/
+
+# Guided learning: local progress and the MCP server's dependencies
+.learning/
+tools/learning-mcp/node_modules/
+
+# Guided learning progress (local only)
+.learning/
+
+# Guided learning progress (local only)
+.learning/

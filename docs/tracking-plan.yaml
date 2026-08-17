@@ -1,0 +1,230 @@
+# Tracking plan — the single source of truth for what this product may emit.
+#
+# Machine-readable on purpose: later phases generate validators from this file
+# instead of hand-writing them, so an event that is not in the plan cannot be
+# accepted, and a planned event cannot silently change shape.
+# Conventions and rationale: docs/tracking-plan.md
+version: 1
+product: lingostreak
+
+purposes:
+  - product_analytics # funnels, retention, activation reporting
+  - personalisation # in-product experience, recommendations, lifecycle messaging
+  - marketing # audiences forwarded to external marketing destinations
+
+pii_classes:
+  - none # not about a person at all (page path, plan code)
+  - pseudonymous # tied to an id, meaningless outside this system (anonymous_id)
+  - personal # identifies a person (email, name)
+  - sensitive # special category, never accepted by this platform
+
+identity:
+  anonymous_id:
+    description: First-party id minted by the browser SDK, stored in a first-party cookie.
+    pii: pseudonymous
+  user_id:
+    description: Stable application id, present only after signup completes.
+    pii: pseudonymous
+  traits:
+    - name: email
+      type: string
+      pii: personal
+      purpose: personalisation
+    - name: display_name
+      type: string
+      pii: personal
+      purpose: personalisation
+    - name: learning_language
+      type: string
+      pii: none
+      purpose: product_analytics
+    - name: plan
+      type: string
+      pii: none
+      purpose: product_analytics
+    - name: signed_up_at
+      type: timestamp
+      pii: none
+      purpose: product_analytics
+
+events:
+  - name: page_viewed
+    version: 1
+    description: A page or in-app screen was displayed. The only event allowed to fire on navigation.
+    owner: growth
+    purpose: product_analytics
+    properties:
+      - name: path
+        type: string
+        required: true
+        pii: none
+        description: Normalised route, for example /lesson/:id — never the raw URL with query parameters.
+      - name: referrer_host
+        type: string
+        required: false
+        pii: none
+        description: Host only; full referrer URLs are dropped at the gateway.
+
+  - name: signup_started
+    version: 1
+    description: The learner submitted the signup form for the first time.
+    owner: growth
+    purpose: product_analytics
+    properties:
+      - name: method
+        type: enum
+        required: true
+        pii: none
+        values: [email, google, apple]
+        description: Authentication method chosen.
+
+  - name: signup_completed
+    version: 1
+    description: The account exists and the learner is authenticated. This is the anonymous-to-known transition.
+    owner: growth
+    purpose: product_analytics
+    properties:
+      - name: method
+        type: enum
+        required: true
+        pii: none
+        values: [email, google, apple]
+        description: Authentication method used.
+
+  - name: onboarding_completed
+    version: 1
+    description: The learner finished choosing a language and a weekly goal.
+    owner: learning
+    purpose: product_analytics
+    properties:
+      - name: learning_language
+        type: string
+        required: true
+        pii: none
+        description: ISO 639-1 code of the language being learned.
+      - name: weekly_goal_minutes
+        type: integer
+        required: true
+        pii: none
+        description: Self-declared weekly study goal.
+
+  - name: lesson_started
+    version: 1
+    description: A lesson was opened. Paired with lesson_completed to measure drop-off inside a lesson.
+    owner: learning
+    purpose: product_analytics
+    properties:
+      - name: lesson_id
+        type: string
+        required: true
+        pii: none
+        description: Stable lesson identifier.
+      - name: unit
+        type: integer
+        required: true
+        pii: none
+        description: Curriculum unit the lesson belongs to.
+
+  - name: lesson_completed
+    version: 1
+    description: A lesson was finished. The activation metric is built from the learner's first three of these.
+    owner: learning
+    purpose: product_analytics
+    properties:
+      - name: lesson_id
+        type: string
+        required: true
+        pii: none
+        description: Stable lesson identifier.
+      - name: score
+        type: integer
+        required: true
+        pii: none
+        description: Percentage score, 0-100.
+      - name: duration_seconds
+        type: integer
+        required: true
+        pii: none
+        description: Time spent in the lesson.
+
+  - name: streak_extended
+    version: 1
+    description: The learner practised on a new calendar day, extending their streak. Retention's in-product signal.
+    owner: learning
+    purpose: product_analytics
+    properties:
+      - name: streak_days
+        type: integer
+        required: true
+        pii: none
+        description: Streak length after this extension.
+
+  - name: paywall_viewed
+    version: 1
+    description: The paywall was displayed, whatever triggered it.
+    owner: monetisation
+    purpose: product_analytics
+    properties:
+      - name: trigger
+        type: enum
+        required: true
+        pii: none
+        values: [lesson_limit, premium_lesson, settings, promotion]
+        description: Why the paywall appeared.
+
+  - name: checkout_started
+    version: 1
+    description: The learner opened checkout for a specific plan.
+    owner: monetisation
+    purpose: product_analytics
+    properties:
+      - name: plan
+        type: enum
+        required: true
+        pii: none
+        values: [monthly, annual]
+        description: Plan selected at checkout.
+
+  - name: subscription_started
+    version: 1
+    description: A paid subscription began. The conversion event; emitted server-side, never from the browser.
+    owner: monetisation
+    purpose: product_analytics
+    source: server
+    properties:
+      - name: plan
+        type: enum
+        required: true
+        pii: none
+        values: [monthly, annual]
+        description: Plan purchased.
+      - name: price_minor_units
+        type: integer
+        required: true
+        pii: none
+        description: Amount charged in the currency's minor units.
+      - name: currency
+        type: string
+        required: true
+        pii: none
+        description: ISO 4217 currency code.
+
+  - name: subscription_cancelled
+    version: 1
+    description: The learner cancelled; the subscription may still be active until period end.
+    owner: monetisation
+    purpose: product_analytics
+    source: server
+    properties:
+      - name: plan
+        type: enum
+        required: true
+        pii: none
+        values: [monthly, annual]
+        description: Plan cancelled.
+      - name: reason
+        type: enum
+        required: false
+        pii: none
+        values: [too_expensive, not_using, missing_content, other]
+        description: Optional self-reported reason.

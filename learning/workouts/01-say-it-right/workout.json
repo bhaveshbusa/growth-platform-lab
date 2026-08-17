@@ -1,0 +1,79 @@
+{
+  "id": "say_it_right",
+  "order": 1,
+  "name": "Say It Right",
+  "phases": "1",
+  "description": "Why taxonomy comes before pipeline: the boundaries of a CDP-shaped system, the tracking plan as reviewed, tested code, and the versioning rules that decide whether your analytics history survives the next release. Covers RFC 0001.",
+  "estimated_minutes": 50,
+  "steps": [
+    {
+      "id": "orientation",
+      "title": "Orientation and prerequisites",
+      "prompt": "prompts/orientation.md",
+      "validates": "Can you state in one sentence what this repository is for, and do the prerequisite tools run on your machine?",
+      "verify": [
+        {
+          "name": "Node.js 20+",
+          "command": "node --version",
+          "expect_match": "v(2[0-9]|[3-9][0-9])\\."
+        },
+        {
+          "name": "pnpm 10+",
+          "command": "pnpm --version",
+          "expect_match": "^(1[0-9]|[2-9][0-9])\\."
+        },
+        {
+          "name": "Dependencies installed",
+          "command": "test -d node_modules && echo installed",
+          "expect_match": "installed"
+        },
+        {
+          "name": "Event gateway readiness endpoint answers (keep the app running in another terminal)",
+          "command": "curl -sf http://localhost:3000/health/ready",
+          "expect_match": "ready|ok"
+        }
+      ],
+      "next": "boundaries"
+    },
+    {
+      "id": "boundaries",
+      "title": "Boundaries: why collection, identity, analytics, and activation are separate",
+      "prompt": "prompts/boundaries.md",
+      "validates": "Why must the gateway accept an event even when identity resolution, the warehouse, and every destination are down — and what does that force to be true about the event stream?",
+      "verify": [
+        {
+          "name": "RFC 0001 is present",
+          "command": "test -f docs/rfcs/0001-scope-service-boundaries-and-event-taxonomy.md && echo found",
+          "expect_match": "found"
+        },
+        {
+          "name": "Unit tests and tracking-plan checks pass",
+          "command": "pnpm test",
+          "expect_match": "(Tests:|passed)",
+          "timeout_seconds": 300
+        }
+      ],
+      "next": "taxonomy"
+    },
+    {
+      "id": "taxonomy",
+      "title": "The tracking plan, and breaking it on purpose",
+      "prompt": "prompts/taxonomy.md",
+      "validates": "Which changes to an existing event are safe within version 1, and which force a version 2 — and why does renaming a property in a shipped client cost more than it appears to?",
+      "verify": [
+        {
+          "name": "Tracking plan parses and satisfies the conventions",
+          "command": "pnpm exec jest docs/tracking-plan.spec.ts",
+          "expect_match": "(Tests:|passed)",
+          "timeout_seconds": 300
+        },
+        {
+          "name": "Working tree is clean again after the break-it exercise",
+          "command": "git status --porcelain docs/",
+          "expect_match": "^$"
+        }
+      ],
+      "next": null
+    }
+  ]
+}

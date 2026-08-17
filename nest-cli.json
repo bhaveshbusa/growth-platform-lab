@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/event-gateway/src",
+  "monorepo": true,
+  "root": "apps/event-gateway",
+  "compilerOptions": {
+    "deleteOutDir": true
+  },
+  "projects": {
+    "event-gateway": {
+      "type": "application",
+      "root": "apps/event-gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/event-gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/event-gateway/tsconfig.app.json"
+      }
+    }
+  }
+}

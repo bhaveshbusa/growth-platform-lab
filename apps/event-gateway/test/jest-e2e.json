@@ -4,6 +4,10 @@
   "testEnvironment": "node",
   "testMatch": ["<rootDir>/apps/event-gateway/test/**/*.e2e-spec.ts"],
   "watchman": false,
+  "moduleNameMapper": {
+    "^@growth/event-contracts$": "<rootDir>/libs/event-contracts/src",
+    "^@growth/event-contracts/(.*)$": "<rootDir>/libs/event-contracts/src/$1"
+  },
   "transform": {
     "^.+\\.(t|j)s$": ["ts-jest", { "tsconfig": "<rootDir>/tsconfig.json" }]
   }

@@ -37,7 +37,7 @@ curl -s http://localhost:3000/health/live
 curl -s http://localhost:3000/health/ready
 ```
 
-Before they run the readiness call, ask what it should return **today** and what it must return from phase 2 onward. Today there are no dependencies, so ready is honest. Once there is a database and a stream, a readiness endpoint that keeps saying "ready" is a lie that hides outages behind a green load-balancer check — and this is the first place the project's stance ("telemetry and health must tell the truth") shows up in code.
+Before they run the readiness call, ask what it should return **today** and what it must return once the gateway depends on something. From phase 2 the tracking plan is such a dependency: readiness names the checks behind its verdict, and answers 503 when the plan will not compile. Once there is a database and a stream, a readiness endpoint that keeps saying "ready" is a lie that hides outages behind a green load-balancer check — and this is the first place the project's stance ("telemetry and health must tell the truth") shows up in code.
 
 If they know liveness versus readiness cold, move fast; if not, this is worth five minutes, because every later drill reads these endpoints.
 

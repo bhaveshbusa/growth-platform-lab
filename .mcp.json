@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "growth-lab-guide": {
+      "command": "node",
+      "args": ["tools/learning-mcp/server.js"]
+    }
+  }
+}

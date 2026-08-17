@@ -1,0 +1,17 @@
+{
+  "name": "growth-lab-guide",
+  "version": "0.1.0",
+  "description": "Guided learning MCP server for Growth Platform Lab. Zero dependencies — connect from any MCP client to follow the workouts step by step with verified progress.",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "growth-lab-guide": "server.js"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "ui": "node ui.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

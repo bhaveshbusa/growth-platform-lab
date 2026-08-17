@@ -69,7 +69,7 @@
         },
         {
           "name": "Working tree is clean again after the break-it exercise",
-          "command": "git status --porcelain docs/tracking-plan.yaml",
+          "command": "git status --porcelain docs/",
           "expect_match": "^$"
         }
       ],

@@ -38,7 +38,7 @@ A read-only page showing workouts, step status, and reflections from the same pr
 
 ## Phase tags (maintainer)
 
-Learners clone the finished system; workouts move them back in time using `phase-NN` tags. After history changes, refresh and push tags:
+Learners clone the finished system; from workout 2 on, workouts move them back in time using `phase-NN` tags. Each phase commit declares itself with a `Phase: NN` trailer, and the tags exist only for phases that have landed on `main`. After history changes, refresh and push tags:
 
 ```bash
 bash tools/learning-mcp/tag-phases.sh

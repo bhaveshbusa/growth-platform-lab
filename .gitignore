@@ -49,9 +49,3 @@ articles/
 # Guided learning: local progress and the MCP server's dependencies
 .learning/
 tools/learning-mcp/node_modules/
-
-# Guided learning progress (local only)
-.learning/
-
-# Guided learning progress (local only)
-.learning/

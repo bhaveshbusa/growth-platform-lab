@@ -79,7 +79,7 @@ pnpm build
 
 ## Changing the tracking plan
 
-Edit `docs/tracking-plan.yaml` in a pull request and run `pnpm test`. The conventions in [docs/tracking-plan.md](docs/tracking-plan.md) — `object_action` past-tense names, typed and unit-suffixed properties, an owner and consent purpose per event, no personal data on events, additive-only changes within a version — are enforced by tests rather than by review alone.
+Edit `docs/tracking-plan.yaml` in a pull request and run `pnpm test`. The conventions in [docs/tracking-plan.md](docs/tracking-plan.md) — `object_action` past-tense names, typed and unit-suffixed properties, an owner and consent purpose per event, no personal data on events — are enforced by tests rather than by review alone. The additive-only rule for changes _within_ a version is currently enforced by review: the tests judge the plan as it stands, not the diff against the previous version.
 
 ## License
 

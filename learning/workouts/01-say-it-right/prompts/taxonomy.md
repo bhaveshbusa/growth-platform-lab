@@ -33,10 +33,11 @@ Have them make each of these edits to `docs/tracking-plan.yaml`, predict the out
 3. Rename `duration_seconds` to `duration` → the unit-suffix check fails.
 4. Add a property with no `type` or no `pii` → the completeness check fails.
 5. The interesting one: add a **new optional property** (`device_type`, `string`, `required: false`, `pii: none`, with a description) → tests pass, because that change is additive and safe. Ask them to explain the asymmetry in their own words.
+6. The uncomfortable one: rename `lesson_completed`'s `score` to `score_percent` and leave `version: 1` alone → **tests pass**, even though this is exactly the breaking change section 2 was about. Ask them why. The suite judges the plan as it stands; it has no memory of the previous version, so "additive within a version" is a rule only a reviewer (or a future snapshot test) can enforce. A green suite is not the same as a safe change.
 
 Then restore the file: `git checkout docs/tracking-plan.yaml`.
 
-Note what the tests do _not_ catch: whether the property is worth collecting, whether the enum values match reality, whether anyone owns the event. Tests enforce conventions; review enforces judgement. Ask which of the five edits above a reviewer would need to catch even if the tests passed.
+Note what the tests do _not_ catch: whether the property is worth collecting, whether the enum values match reality, whether anyone owns the event. Tests enforce conventions; review enforces judgement. Edit 6 is the sharpest example: it is the one a reviewer must catch precisely because the tests do not.
 
 ### 4. Look forward
 

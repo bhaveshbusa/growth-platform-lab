@@ -49,5 +49,5 @@ with `streak_extended` and repeated `lesson_completed` carrying retention, and `
 ## Changing the plan
 
 1. Edit `docs/tracking-plan.yaml` in a pull request; the diff is the review artefact.
-2. `pnpm test` enforces the conventions above (naming, types, required metadata, no `sensitive` data, additive-only versioning rules).
+2. `pnpm test` enforces the conventions above (naming, types, required metadata, no personal or `sensitive` data on events). It checks the plan as it stands, not the diff, so the additive-only rule is a review obligation: a rename inside an existing version passes the suite and must be caught by a human.
 3. From phase 2 on, validators are derived from this file, so the gateway rejects anything the plan does not describe — an unplanned event is a dead-lettered event, not a new column.

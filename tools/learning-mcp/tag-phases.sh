@@ -11,7 +11,7 @@ cd "$(git rev-parse --show-toplevel)"
 tagged=0
 while read -r sha phase; do
   [ -n "$phase" ] || continue
-  printf -v tag "phase-%02d" "$phase"
+  printf -v tag "phase-%02d" "$((10#$phase))"
   git tag -f "$tag" "$sha"
   echo "$tag -> ${sha:0:7}  $(git log -1 --format=%s "$sha")"
   tagged=$((tagged + 1))

@@ -47,7 +47,7 @@ git push origin --tags
 
 ## Fresh start / reset
 
-A returning learner (or the maintainer) can reset with: `git switch main`, deleting `.learning/progress.json`, and (from phase 2 onward) `docker compose down -v`, and optionally deleting `.env` and `.learning/progress.json`. The orientation step offers this automatically when it detects prior state.
+A returning learner (or the maintainer) can reset with: `git switch main`, deleting `.learning/progress.json`, and (from phase 5 onward) `docker compose down -v`, and optionally deleting `.env` and `.learning/progress.json`. The orientation step offers this automatically when it detects prior state.
 
 ## Authoring new workouts
 

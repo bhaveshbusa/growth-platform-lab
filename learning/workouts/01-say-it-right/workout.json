@@ -2,9 +2,9 @@
   "id": "say_it_right",
   "order": 1,
   "name": "Say It Right",
-  "phases": "1",
-  "description": "Why taxonomy comes before pipeline: the boundaries of a CDP-shaped system, the tracking plan as reviewed, tested code, and the versioning rules that decide whether your analytics history survives the next release. Covers RFC 0001.",
-  "estimated_minutes": 50,
+  "phases": "1-2",
+  "description": "Why taxonomy comes before pipeline: the boundaries of a CDP-shaped system, the tracking plan as reviewed, tested code, the versioning rules that decide whether your analytics history survives the next release, and the contracts compiled from the plan \u2014 including what a good rejection reason is worth at 3am. Covers RFCs 0001 and 0002.",
+  "estimated_minutes": 75,
   "steps": [
     {
       "id": "orientation",
@@ -70,6 +70,43 @@
         {
           "name": "Working tree is clean again after the break-it exercise",
           "command": "git status --porcelain docs/",
+          "expect_match": "^$"
+        }
+      ],
+      "next": "contracts"
+    },
+    {
+      "id": "contracts",
+      "title": "Contracts compiled from the plan, and rejections worth reading",
+      "prompt": "prompts/contracts.md",
+      "validates": "Why is validation compiled from the tracking plan rather than written per event, why does each rejection carry a specific reason instead of \"invalid\", and why is the gateway live but not ready when the plan will not compile?",
+      "verify": [
+        {
+          "name": "Contract tests pass, including the generated-types drift check",
+          "command": "pnpm exec jest libs/event-contracts",
+          "expect_match": "(Tests:|passed)",
+          "timeout_seconds": 300
+        },
+        {
+          "name": "A planned event is accepted by the CLI",
+          "command": "pnpm -s contracts:validate examples/events/lesson-completed.json",
+          "expect_match": "accepted",
+          "timeout_seconds": 300
+        },
+        {
+          "name": "A browser-sent money event is refused for the right reason",
+          "command": "pnpm -s contracts:validate examples/events/rejected.json || true",
+          "expect_match": "server_only_event_from_client",
+          "timeout_seconds": 300
+        },
+        {
+          "name": "The gateway publishes the contract catalogue (keep the app running in another terminal)",
+          "command": "curl -sf http://localhost:3000/v1/contracts",
+          "expect_match": "plan_fingerprint"
+        },
+        {
+          "name": "Working tree is clean again after the break-it exercises",
+          "command": "git status --porcelain docs/ libs/ examples/",
           "expect_match": "^$"
         }
       ],

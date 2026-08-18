@@ -1,0 +1,15 @@
+{
+  "name": "@growth/event-contracts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Event contracts compiled from the tracking plan: validation, rejection reasons, generated types.",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.lib.json"
+  },
+  "dependencies": {
+    "yaml": "2.9.0"
+  }
+}

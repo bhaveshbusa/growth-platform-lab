@@ -12,15 +12,18 @@
   "scripts": {
     "start:event-gateway:dev": "nest start event-gateway --watch",
     "start:event-gateway": "node dist/apps/event-gateway/main.js",
-    "build": "nest build event-gateway",
-    "lint": "eslint \"apps/**/*.ts\" \"docs/**/*.ts\"",
-    "format": "prettier --write \"apps/**/*.ts\" \"docs/**/*.{md,ts,yaml}\" \"learning/**/*.{json,md}\" \"*.{json,md,yml}\"",
-    "format:check": "prettier --check \"apps/**/*.ts\" \"docs/**/*.{md,ts,yaml}\" \"learning/**/*.{json,md}\" \"*.{json,md,yml}\"",
+    "build": "pnpm --filter @growth/event-contracts build && nest build event-gateway",
+    "lint": "eslint \"apps/**/*.ts\" \"libs/**/*.ts\" \"docs/**/*.ts\"",
+    "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.{ts,md}\" \"docs/**/*.{md,ts,yaml}\" \"examples/**/*.{json,md}\" \"learning/**/*.{json,md}\" \"*.{json,md,yml}\"",
+    "format:check": "prettier --check \"apps/**/*.ts\" \"libs/**/*.{ts,md}\" \"docs/**/*.{md,ts,yaml}\" \"examples/**/*.{json,md}\" \"learning/**/*.{json,md}\" \"*.{json,md,yml}\"",
+    "contracts:generate": "ts-node --project tsconfig.json libs/event-contracts/src/codegen/cli.ts",
+    "contracts:validate": "ts-node --project tsconfig.json libs/event-contracts/src/cli/validate-event.ts",
     "test": "jest",
     "test:e2e": "jest --config apps/event-gateway/test/jest-e2e.json",
     "learning:ui": "node tools/learning-mcp/ui.js"
   },
   "dependencies": {
+    "@growth/event-contracts": "workspace:*",
     "@nestjs/common": "11.1.28",
     "@nestjs/config": "4.0.2",
     "@nestjs/core": "11.1.28",

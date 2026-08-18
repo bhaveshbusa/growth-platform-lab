@@ -1,0 +1,89 @@
+[
+  {
+    "message_id": "m-01",
+    "event": "lesson_abandoned",
+    "version": 1,
+    "sent_at": "2026-02-01T10:00:00.000Z",
+    "anonymous_id": "anon_7f3c9a12",
+    "source": "client",
+    "consent": {
+      "product_analytics": true,
+      "personalisation": true,
+      "marketing": false
+    },
+    "properties": {
+      "lesson_id": "l_greetings_01"
+    }
+  },
+  {
+    "message_id": "m-02",
+    "event": "lesson_completed",
+    "version": 1,
+    "sent_at": "2026-02-01T10:00:01.000Z",
+    "anonymous_id": "anon_7f3c9a12",
+    "source": "client",
+    "consent": {
+      "product_analytics": true,
+      "personalisation": true,
+      "marketing": false
+    },
+    "properties": {
+      "lesson_id": "l_greetings_01",
+      "score": "92",
+      "duration_seconds": 240
+    }
+  },
+  {
+    "message_id": "m-03",
+    "event": "lesson_completed",
+    "version": 1,
+    "sent_at": "2026-02-01T10:00:02.000Z",
+    "anonymous_id": "anon_7f3c9a12",
+    "source": "client",
+    "consent": {
+      "product_analytics": true,
+      "personalisation": true,
+      "marketing": false
+    },
+    "properties": {
+      "lesson_id": "l_greetings_01",
+      "score": 92,
+      "duration_seconds": 240,
+      "learner_email": "someone@example.test"
+    }
+  },
+  {
+    "message_id": "m-04",
+    "event": "subscription_started",
+    "version": 1,
+    "sent_at": "2026-02-01T10:00:03.000Z",
+    "anonymous_id": "anon_7f3c9a12",
+    "source": "client",
+    "consent": {
+      "product_analytics": true,
+      "personalisation": true,
+      "marketing": false
+    },
+    "properties": {
+      "plan": "annual",
+      "price_minor_units": 8999,
+      "currency": "GBP"
+    }
+  },
+  {
+    "message_id": "m-05",
+    "event": "signup_started",
+    "version": 2,
+    "sent_at": "2026-02-01T10:00:04.000Z",
+    "anonymous_id": "anon_7f3c9a12",
+    "source": "client",
+    "consent": {
+      "product_analytics": true,
+      "personalisation": true,
+      "marketing": false
+    },
+    "properties": {
+      "method": "email"
+    }
+  }
+]

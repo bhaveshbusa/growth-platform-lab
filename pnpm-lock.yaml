@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@growth/event-contracts':
+        specifier: workspace:*
+        version: link:libs/event-contracts
       '@nestjs/common':
         specifier: 11.1.28
         version: 11.1.28(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -90,6 +93,12 @@ importers:
       typescript-eslint:
         specifier: 8.64.0
         version: 8.64.0(eslint@10.7.0)(typescript@5.9.3)
+
+  libs/event-contracts:
+    dependencies:
+      yaml:
+        specifier: 2.9.0
+        version: 2.9.0
 
 packages:
 

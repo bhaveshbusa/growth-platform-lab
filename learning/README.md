@@ -16,14 +16,14 @@ The server has zero dependencies, and there is no account, signup, or telemetry.
 
 Workouts land with the phases they teach. Planned shape:
 
-| #   | Workout        | Phases | What you learn (and break)                                                                                                              | Status                  |
-| --- | -------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
-| 1   | Say It Right   | 1      | Taxonomy, tracking plan as code, contracts and versioning — propose a "harmless" event change and watch the tests explain why it is not | phase 1 steps available |
-| 2   | The Front Door | 3-5    | Ingestion, idempotency, consent, dead-letters, durable streams — replay a batch, kill the stream mid-flow                               | planned                 |
-| 3   | Who Is This?   | 6-7    | Identity resolution, trait merges, segments — stitch two identities wrongly, then fix the rules                                         | planned                 |
-| 4   | Ask the Data   | 8-10   | Warehouse models, activation, funnels, retention, experiments — mis-stitch sessions and watch the funnel lie                            | planned                 |
-| 5   | Seeing Inside  | 12-14  | Logs, metrics, traces end to end including the browser — drop the collector, blow up cardinality                                        | planned                 |
-| 6   | 3am            | 15-16  | SLOs, burn rates, incident drills — five failure injections, diagnosed from telemetry alone                                             | planned                 |
+| #   | Workout        | Phases | What you learn (and break)                                                                                                                                                                         | Status                    |
+| --- | -------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| 1   | Say It Right   | 1-2    | Taxonomy, tracking plan as code, contracts and versioning — propose a "harmless" event change and watch the tests explain why it is not, then invent an event and watch validation follow the plan | phase 1-2 steps available |
+| 2   | The Front Door | 3-5    | Ingestion, idempotency, consent, dead-letters, durable streams — replay a batch, kill the stream mid-flow                                                                                          | planned                   |
+| 3   | Who Is This?   | 6-7    | Identity resolution, trait merges, segments — stitch two identities wrongly, then fix the rules                                                                                                    | planned                   |
+| 4   | Ask the Data   | 8-10   | Warehouse models, activation, funnels, retention, experiments — mis-stitch sessions and watch the funnel lie                                                                                       | planned                   |
+| 5   | Seeing Inside  | 12-14  | Logs, metrics, traces end to end including the browser — drop the collector, blow up cardinality                                                                                                   | planned                   |
+| 6   | 3am            | 15-16  | SLOs, burn rates, incident drills — five failure injections, diagnosed from telemetry alone                                                                                                        | planned                   |
 
 From workout 2 on, workouts use `phase-NN` git tags to travel back in time, so you can stand in the world before a component existed and see what was missing. A tag is pushed as each phase lands, so `git tag -l` shows how far the lab has got; workout 1 needs no tag, because phase 1 _is_ the beginning.
 
@@ -41,7 +41,7 @@ pnpm learning:ui   # http://localhost:5858
 
 ## Starting fresh
 
-`git switch main`, delete `.learning/progress.json`, and (from phase 2 onward) `docker compose down -v` to drop containers and data volumes. The orientation step detects prior state and offers this.
+`git switch main`, delete `.learning/progress.json`, and (from phase 5 onward) `docker compose down -v` to drop containers and data volumes. The orientation step detects prior state and offers this.
 
 ## For authors
 

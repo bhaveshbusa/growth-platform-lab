@@ -29,12 +29,12 @@ describe('Health endpoints (e2e)', () => {
       .expect({ status: 'ok' });
   });
 
-  it('GET /health/ready returns the readiness status', async () => {
+  it('GET /health/ready reports the checks behind the verdict', async () => {
     const server = app.getHttpServer() as Server;
 
     await request(server)
       .get('/health/ready')
       .expect(200)
-      .expect({ status: 'ready' });
+      .expect({ checks: { event_contracts: 'ok' }, status: 'ready' });
   });
 });

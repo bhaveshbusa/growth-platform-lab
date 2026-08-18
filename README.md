@@ -6,15 +6,17 @@ The subject product is **Lingostreak**, a fictional language-learning subscripti
 
 This repository is **not a production analytics platform** and must not be used to collect real user data.
 
-## Current scope (phase 1)
+## Current scope (phase 2)
 
-- `event-gateway` — the future public write path; currently a runnable Nest application with liveness and readiness endpoints and no dependencies
+- `event-gateway` — the future public write path; today it publishes the contract catalogue and reports itself unready when the tracking plan will not compile
+- `libs/event-contracts` — contracts **compiled from** the tracking plan: envelope and property validation, a closed set of rejection reasons, and generated TypeScript types
 - `docs/tracking-plan.yaml` — the machine-readable tracking plan: every event, property, type, owner, consent purpose, and PII class, with conventions enforced by `pnpm test`
 - `docs/tracking-plan.md` — the conventions and the reasoning behind them
 - [RFC 0001](docs/rfcs/0001-scope-service-boundaries-and-event-taxonomy.md) — scope, service boundaries, event taxonomy, and the two standing observability rules
+- [RFC 0002](docs/rfcs/0002-event-contracts-and-validation.md) — contracts derived from the plan, the rejection taxonomy, and why generated types are checked in
 - [Architecture](docs/architecture.md) — target shape and what exists today
 
-Nothing is collected yet. Phase 1 deliberately ships the taxonomy and the boundaries before the pipeline, because taxonomy is the only decision here that cannot be corrected later.
+Nothing is collected yet: there is no `POST /v1/events` until phase 3. Phase 2 can tell you an event is wrong; it cannot yet tell you it happened.
 
 ## Learning path
 
@@ -23,7 +25,7 @@ Sixteen phases, each documented in an RFC and implemented in a single `feat:` co
 | Phase | Topic                                                                 | RFC                                                                   |
 | ----- | --------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | 1     | Scope, service boundaries, and event taxonomy                         | [0001](docs/rfcs/0001-scope-service-boundaries-and-event-taxonomy.md) |
-| 2     | Event contracts and validation derived from the plan                  | planned                                                               |
+| 2     | Event contracts and validation derived from the plan                  | [0002](docs/rfcs/0002-event-contracts-and-validation.md)              |
 | 3     | Event gateway: batch ingestion, idempotency, consent, dead-lettering  | planned                                                               |
 | 4     | Browser SDK and demo app instrumentation                              | planned                                                               |
 | 5     | Durable event stream and replay                                       | planned                                                               |
@@ -51,7 +53,7 @@ See the [Agentic Learning Experience guide](learning/README.md).
 
 - Node.js 20 or newer (Node.js 22 LTS recommended)
 - pnpm 10 or newer
-- Docker with Docker Compose (needed from phase 2 onward)
+- Docker with Docker Compose (needed from phase 5 onward)
 
 ## Install and run
 
@@ -62,11 +64,26 @@ pnpm start:event-gateway:dev
 ```
 
 ```bash
-curl -s http://localhost:3000/health/live    # {"status":"ok"}
-curl -s http://localhost:3000/health/ready   # {"status":"ready"}
+curl -s http://localhost:3000/health/live                    # {"status":"ok"}
+curl -s http://localhost:3000/health/ready                   # ready, plus the checks behind the verdict
+curl -s http://localhost:3000/v1/contracts                   # every event a client may send
+curl -s http://localhost:3000/v1/contracts/lesson_completed/1
 ```
 
 `.env` is ignored by Git; `.env.example` is the documented default.
+
+## Trying the contracts
+
+The write path arrives in phase 3, so validation is exercised from the terminal:
+
+```bash
+pnpm contracts:validate examples/events/lesson-completed.json   # accepted, exit 0
+pnpm contracts:validate examples/events/rejected.json           # one reason per event, exit 1
+```
+
+Each rejection names a reason from a closed taxonomy (`unknown_event`, `property_type_invalid`,
+`server_only_event_from_client`, …) and the field, never the offending value. See
+[examples/events/README.md](examples/events/README.md) and [RFC 0002](docs/rfcs/0002-event-contracts-and-validation.md).
 
 ## Checks
 
@@ -79,7 +96,7 @@ pnpm build
 
 ## Changing the tracking plan
 
-Edit `docs/tracking-plan.yaml` in a pull request and run `pnpm test`. The conventions in [docs/tracking-plan.md](docs/tracking-plan.md) — `object_action` past-tense names, typed and unit-suffixed properties, an owner and consent purpose per event, no personal data on events — are enforced by tests rather than by review alone. The additive-only rule for changes _within_ a version is currently enforced by review: the tests judge the plan as it stands, not the diff against the previous version.
+Edit `docs/tracking-plan.yaml` in a pull request, run `pnpm contracts:generate` to refresh the generated types, and run `pnpm test`. Validation is compiled from the plan, so nothing else has to be edited: a new event becomes acceptable, and a removed one stops being acceptable. The conventions in [docs/tracking-plan.md](docs/tracking-plan.md) — `object_action` past-tense names, typed and unit-suffixed properties, an owner and consent purpose per event, no personal data on events — are enforced by tests rather than by review alone. The additive-only rule for changes _within_ a version is currently enforced by review: the tests judge the plan as it stands, not the diff against the previous version.
 
 ## License
 

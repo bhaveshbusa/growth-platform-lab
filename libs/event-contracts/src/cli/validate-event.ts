@@ -27,6 +27,11 @@ function main(): number {
   }
 
   const events: unknown[] = Array.isArray(parsed) ? parsed : [parsed];
+  if (events.length === 0) {
+    process.stderr.write('No events to validate: the batch is empty\n');
+    return 1;
+  }
+
   let rejected = 0;
 
   for (const [index, event] of events.entries()) {

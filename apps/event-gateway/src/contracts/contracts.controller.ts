@@ -6,11 +6,7 @@ import {
   ParseIntPipe,
   ServiceUnavailableException,
 } from '@nestjs/common';
-import {
-  PLAN_FINGERPRINT,
-  type EventContracts,
-  type PlanProperty,
-} from '@growth/event-contracts';
+import type { EventContracts, PlanProperty } from '@growth/event-contracts';
 import { ContractsService } from './contracts.service';
 
 interface ContractSummary {
@@ -56,7 +52,7 @@ export class ContractsController {
           .map((property) => property.name),
         source: event.source,
       })),
-      plan_fingerprint: PLAN_FINGERPRINT,
+      plan_fingerprint: this.contracts.planFingerprint ?? '',
       plan_version: contracts.plan.version,
       product: contracts.plan.product,
     };

@@ -1,6 +1,6 @@
 import { NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { EventContracts } from '@growth/event-contracts';
+import { EventContracts, fingerprintPlan } from '@growth/event-contracts';
 import { ContractsController } from './contracts.controller';
 import { ContractsService } from './contracts.service';
 
@@ -8,6 +8,7 @@ describe('ContractsController', () => {
   const service = {
     current: undefined as EventContracts | undefined,
     error: undefined as string | undefined,
+    planFingerprint: undefined as string | undefined,
   };
 
   let controller: ContractsController;
@@ -15,6 +16,7 @@ describe('ContractsController', () => {
   beforeEach(async () => {
     service.current = EventContracts.fromPlan();
     service.error = undefined;
+    service.planFingerprint = fingerprintPlan(service.current.plan);
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ContractsController],
@@ -36,6 +38,12 @@ describe('ContractsController', () => {
       required_properties: ['plan', 'price_minor_units', 'currency'],
       source: 'server',
     });
+  });
+
+  it('publishes the fingerprint of the plan this process compiled', () => {
+    expect(controller.list().plan_fingerprint).toBe(
+      fingerprintPlan(EventContracts.fromPlan().plan),
+    );
   });
 
   it('returns one contract with its full property list', () => {

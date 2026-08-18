@@ -63,7 +63,9 @@ Each edit to `docs/tracking-plan.yaml`; predict first, then run.
 
    Live but not ready, and it says why. Ask what would be wrong with crashing instead (liveness and readiness would carry the same information, and you lose the ability to ask a running instance what is broken), and what would be wrong with starting up with an empty contract set (a collector that accepts everything — a data quality incident with excellent uptime).
 
-4. The sharp one: rename `lesson_completed`'s `score` to `score_percent`, run `pnpm contracts:generate`, and run `pnpm test`. Everything is green. Ask them to explain why the suite is happy about a change that would split a metric in production — the same lesson as the previous step's edit 6, now with the generated types complicit. The fingerprint changed, which is the only signal anyone gets; making that signal enforceable is a review rule, not a test.
+4. The sharp one: rename `lesson_completed`'s `score` to `score_percent`, run `pnpm contracts:generate`, and run `pnpm test`. The suite **fails** — around 13 tests across three suites. Before they read the output, ask them to predict _which_ tests fail and why.
+
+   Every failure is a fixture that still says `score` (the example payloads and the specs built on them); the drift check itself went green the moment they regenerated. So the suite noticed that some JSON no longer matches the plan — it did **not** notice that renaming a property in a shipped event is breaking. Ask them what happens after they dutifully update the fixtures: the suite goes green, the plan is internally consistent, and clients in the wild keep sending `score` into a column nobody reads. That is the same lesson as the previous step's edit 6, now with the generated types and the fixtures complicit. The changed fingerprint is the only signal anyone gets, and making it enforceable is a review rule, not a test.
 
 Then restore: `git checkout docs/tracking-plan.yaml libs/event-contracts/src/generated/events.ts`.
 

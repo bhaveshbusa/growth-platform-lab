@@ -1,6 +1,10 @@
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import {
+  PLAN_FINGERPRINT,
+  resolveTrackingPlanPath,
+} from '@growth/event-contracts';
 import { ContractsService } from './contracts.service';
 
 function planFile(contents: string): string {
@@ -29,6 +33,19 @@ describe('ContractsService', () => {
     expect(service.error).toBeUndefined();
   });
 
+  it('fingerprints the plan it compiled, not the plan the types were built from', () => {
+    const repositoryPlan = readFileSync(resolveTrackingPlanPath(), 'utf8');
+    process.env.TRACKING_PLAN_PATH = planFile(
+      repositoryPlan.replace('name: duration_seconds', 'name: duration_ms'),
+    );
+
+    const service = new ContractsService();
+    service.onModuleInit();
+
+    expect(service.planFingerprint).toMatch(/^sha256:/);
+    expect(service.planFingerprint).not.toBe(PLAN_FINGERPRINT);
+  });
+
   it('survives an unusable plan instead of crashing the process', () => {
     process.env.TRACKING_PLAN_PATH = planFile(
       'version: 1\nproduct: lingostreak\n',
@@ -39,6 +56,7 @@ describe('ContractsService', () => {
 
     expect(service.status).toBe('failed');
     expect(service.current).toBeUndefined();
+    expect(service.planFingerprint).toBeUndefined();
     expect(service.error).toContain('purposes');
   });
 
